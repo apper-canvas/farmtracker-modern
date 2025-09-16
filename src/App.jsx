@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import FarmerDetails from "@/components/pages/FarmerDetails";
+import Farmers from "@/components/pages/Farmers";
 import Farms from "@/components/pages/Farms";
 import Tasks from "@/components/pages/Tasks";
 import Weather from "@/components/pages/Weather";
@@ -17,7 +18,8 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+<Route path="/" element={<Dashboard />} />
+          <Route path="/farmers" element={<Farmers />} />
 <Route path="/farms" element={<Farms />} />
           <Route path="/crops" element={<Crops />} />
           <Route path="/tasks" element={<Tasks />} />
