@@ -13,6 +13,8 @@ import Empty from "@/components/ui/Empty";
 import ApperIcon from "@/components/ApperIcon";
 import { transactionService } from "@/services/api/transactionService";
 import { toast } from "react-toastify";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const Finances = () => {
   const [transactions, setTransactions] = useState([]);
@@ -125,35 +127,108 @@ const Finances = () => {
     .filter(t => t.type === "expense")
     .reduce((sum, t) => sum + t.amount, 0);
 
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD"
-    }).format(amount);
-  };
+const formatCurrency = (amount) => {
+return new Intl.NumberFormat("en-US", {
+style: "currency",
+currency: "USD"
+}).format(amount);
+};
 
-  const getCategoryLabel = (category) => {
-    const categoryLabels = {
-      // Expenses
-      "seeds": "Seeds & Plants",
-      "fertilizer": "Fertilizer",
-      "pesticides": "Pesticides",
-      "equipment": "Equipment",
-      "fuel": "Fuel",
-      "labor": "Labor",
-      "maintenance": "Maintenance",
-      "utilities": "Utilities",
-      // Income
-      "crop_sales": "Crop Sales",
-      "livestock": "Livestock Sales",
-      "subsidies": "Government Subsidies",
-      "insurance": "Insurance Payout",
-      "services": "Farm Services",
-      "other": "Other"
-    };
-    
-    return categoryLabels[category] || category;
-  };
+const getCategoryLabel = (category) => {
+const categoryLabels = {
+// Expenses
+"seeds": "Seeds & Plants",
+"fertilizer": "Fertilizer",
+"pesticides": "Pesticides",
+"equipment": "Equipment",
+"fuel": "Fuel",
+"labor": "Labor",
+"maintenance": "Maintenance",
+"utilities": "Utilities",
+// Income
+"crop_sales": "Crop Sales",
+"livestock": "Livestock Sales",
+"subsidies": "Government Subsidies",
+"insurance": "Insurance Payout",
+"services": "Farm Services",
+"other": "Other"
+};
+
+return categoryLabels[category] || category;
+};
+
+const exportToCSV = () => {
+const headers = ["Date", "Type", "Category", "Description", "Amount"];
+const csvContent = [
+headers.join(","),
+...sortedTransactions.map(transaction => [
+format(new Date(transaction.date), "yyyy-MM-dd"),
+transaction.type,
+getCategoryLabel(transaction.category),
+`"${(transaction.description || "").replace(/"/g, '""')}"`,
+transaction.amount
+].join(","))
+].join("\n");
+
+const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+const link = document.createElement("a");
+link.href = URL.createObjectURL(blob);
+link.download = `financial-report-${format(new Date(), "yyyy-MM-dd")}.csv`;
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+toast.success("CSV export completed successfully");
+};
+
+const exportToPDF = () => {
+const doc = new jsPDF();
+const currentDate = format(new Date(), "MMMM dd, yyyy");
+const filterLabel = filter === "all" ? "All Transactions" : 
+filter === "income" ? "Income Only" : "Expenses Only";
+
+// Header
+doc.setFontSize(20);
+doc.text("Financial Report", 20, 30);
+doc.setFontSize(12);
+doc.text(`Generated on: ${currentDate}`, 20, 40);
+doc.text(`Filter: ${filterLabel}`, 20, 50);
+
+// Summary Statistics
+doc.setFontSize(14);
+doc.text("Summary", 20, 70);
+doc.setFontSize(10);
+doc.text(`Total Income: ${formatCurrency(totalIncome)}`, 20, 80);
+doc.text(`Total Expenses: ${formatCurrency(totalExpenses)}`, 20, 90);
+doc.text(`Net Profit: ${formatCurrency(netProfit)}`, 20, 100);
+
+// Transaction Table
+const tableData = sortedTransactions.map(transaction => [
+format(new Date(transaction.date), "MMM dd, yyyy"),
+transaction.type,
+getCategoryLabel(transaction.category),
+transaction.description || "-",
+formatCurrency(transaction.amount)
+]);
+
+doc.autoTable({
+head: [["Date", "Type", "Category", "Description", "Amount"]],
+body: tableData,
+startY: 110,
+theme: "striped",
+headStyles: { fillColor: [45, 80, 22] },
+styles: { fontSize: 8, cellPadding: 3 },
+columnStyles: {
+0: { cellWidth: 25 },
+1: { cellWidth: 20 },
+2: { cellWidth: 35 },
+3: { cellWidth: 50 },
+4: { cellWidth: 25, halign: "right" }
+}
+});
+
+doc.save(`financial-report-${format(new Date(), "yyyy-MM-dd")}.pdf`);
+toast.success("PDF export completed successfully");
+};
 
   const filterOptions = [
     { value: "all", label: "All Transactions" },
@@ -267,24 +342,48 @@ const Finances = () => {
         {/* Transactions List */}
         <Card>
           <CardHeader>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <CardTitle className="flex items-center gap-2">
-                <ApperIcon name="Receipt" className="w-5 h-5 text-green-600" />
-                Transaction History ({filteredTransactions.length})
-              </CardTitle>
-              
-              <Select
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="min-w-[180px]"
-              >
-                {filterOptions.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </Select>
-            </div>
+<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+<CardTitle className="flex items-center gap-2">
+<ApperIcon name="Receipt" className="w-5 h-5 text-green-600" />
+Transaction History ({filteredTransactions.length})
+</CardTitle>
+
+<div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+<div className="flex gap-2">
+<Button
+onClick={exportToCSV}
+variant="outline"
+size="sm"
+className="flex items-center gap-2"
+disabled={sortedTransactions.length === 0}
+>
+<ApperIcon name="FileText" className="w-4 h-4" />
+Export CSV
+</Button>
+<Button
+onClick={exportToPDF}
+variant="outline"
+size="sm"
+className="flex items-center gap-2"
+disabled={sortedTransactions.length === 0}
+>
+<ApperIcon name="FileDown" className="w-4 h-4" />
+Export PDF
+</Button>
+</div>
+<Select
+value={filter}
+onChange={(e) => setFilter(e.target.value)}
+className="min-w-[180px]"
+>
+{filterOptions.map(option => (
+<option key={option.value} value={option.value}>
+{option.label}
+</option>
+))}
+</Select>
+</div>
+</div>
           </CardHeader>
           <CardContent>
             {sortedTransactions.length === 0 ? (
