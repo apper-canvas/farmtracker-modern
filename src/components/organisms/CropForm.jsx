@@ -7,19 +7,22 @@ import Select from "@/components/atoms/Select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/Card";
 import ApperIcon from "@/components/ApperIcon";
 import { cropService } from "@/services/api/cropService";
-
+import { farmService } from "@/services/api/farmService";
 const CropForm = ({ crop, onSave, onCancel }) => {
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     name: "",
     variety: "",
     plantedDate: "",
     area: "",
     status: "planted",
-    expectedHarvest: ""
+    expectedHarvest: "",
+    farmId: ""
   });
   
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [farms, setFarms] = useState([]);
+  const [farmsLoading, setFarmsLoading] = useState(true);
 
   const statusOptions = [
     { value: "planted", label: "Planted" },
@@ -29,6 +32,24 @@ const CropForm = ({ crop, onSave, onCancel }) => {
     { value: "harvested", label: "Harvested" }
   ];
 
+// Load farms on component mount
+  useEffect(() => {
+    const loadFarms = async () => {
+      try {
+        setFarmsLoading(true);
+        const farmData = await farmService.getAll();
+        setFarms(farmData);
+      } catch (error) {
+        console.error("Error loading farms:", error);
+        toast.error("Failed to load farms");
+      } finally {
+        setFarmsLoading(false);
+      }
+    };
+
+    loadFarms();
+  }, []);
+
   useEffect(() => {
     if (crop) {
       setFormData({
@@ -37,7 +58,8 @@ const CropForm = ({ crop, onSave, onCancel }) => {
         plantedDate: crop.plantedDate ? format(new Date(crop.plantedDate), "yyyy-MM-dd") : "",
         area: crop.area?.toString() || "",
         status: crop.status || "planted",
-        expectedHarvest: crop.expectedHarvest ? format(new Date(crop.expectedHarvest), "yyyy-MM-dd") : ""
+        expectedHarvest: crop.expectedHarvest ? format(new Date(crop.expectedHarvest), "yyyy-MM-dd") : "",
+        farmId: crop.farmId?.toString() || ""
       });
     }
   }, [crop]);
@@ -97,11 +119,11 @@ const CropForm = ({ crop, onSave, onCancel }) => {
     
     try {
       const cropData = {
-        ...formData,
+...formData,
         area: parseFloat(formData.area),
         plantedDate: new Date(formData.plantedDate).toISOString(),
         expectedHarvest: formData.expectedHarvest ? new Date(formData.expectedHarvest).toISOString() : null,
-        farmId: "1" // Default farm ID
+        farmId: parseInt(formData.farmId)
       };
 
       let savedCrop;
@@ -131,7 +153,7 @@ const CropForm = ({ crop, onSave, onCancel }) => {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
               label="Crop Name"
               name="name"
@@ -148,6 +170,39 @@ const CropForm = ({ crop, onSave, onCancel }) => {
               onChange={handleChange}
               placeholder="e.g., Sweet Corn, Winter Wheat"
             />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Select
+              label="Farm"
+              name="farmId"
+              value={formData.farmId}
+              onChange={handleChange}
+              error={errors.farmId}
+              disabled={farmsLoading}
+            >
+              <option value="">
+                {farmsLoading ? "Loading farms..." : "Select a farm"}
+              </option>
+              {farms.map(farm => (
+                <option key={farm.Id} value={farm.Id.toString()}>
+                  {farm.name} - {farm.location}
+                </option>
+              ))}
+            </Select>
+
+            <Select
+              label="Status"
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+            >
+              {statusOptions.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -183,18 +238,7 @@ const CropForm = ({ crop, onSave, onCancel }) => {
               placeholder="0.0"
             />
             
-            <Select
-              label="Status"
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-            >
-              {statusOptions.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
+            <div></div>
           </div>
 
           <div className="flex gap-3 pt-4">

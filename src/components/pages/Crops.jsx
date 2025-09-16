@@ -154,8 +154,9 @@ const Crops = () => {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-gray-200">
+<tr className="border-b border-gray-200">
                       <th className="text-left py-3 px-4 font-medium text-gray-700">Crop</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-700">Farm</th>
                       <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
                       <th className="text-left py-3 px-4 font-medium text-gray-700">Area</th>
                       <th className="text-left py-3 px-4 font-medium text-gray-700">Planted Date</th>
