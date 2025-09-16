@@ -10,6 +10,7 @@ import Finances from "@/components/pages/Finances";
 import Dashboard from "@/components/pages/Dashboard";
 import Crops from "@/components/pages/Crops";
 import Settings from "@/components/pages/Settings";
+import Layout from "@/components/organisms/Layout";
 
 // Pages
 // Pages
@@ -18,15 +19,15 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Routes>
-<Route path="/" element={<Dashboard />} />
-          <Route path="/farmers" element={<Farmers />} />
-<Route path="/farms" element={<Farms />} />
-          <Route path="/crops" element={<Crops />} />
-          <Route path="/tasks" element={<Tasks />} />
-          <Route path="/weather" element={<Weather />} />
-          <Route path="/finances" element={<Finances />} />
-          <Route path="/farmers/:id" element={<FarmerDetails />} />
-          <Route path="/settings" element={<Settings />} />
+<Route path="/" element={<Layout title="Dashboard"><Dashboard /></Layout>} />
+          <Route path="/farmers" element={<Layout title="Farmers"><Farmers /></Layout>} />
+<Route path="/farms" element={<Layout title="Farms"><Farms /></Layout>} />
+          <Route path="/crops" element={<Layout title="Crops"><Crops /></Layout>} />
+          <Route path="/tasks" element={<Layout title="Tasks"><Tasks /></Layout>} />
+          <Route path="/weather" element={<Layout title="Weather"><Weather /></Layout>} />
+          <Route path="/finances" element={<Layout title="Finances"><Finances /></Layout>} />
+          <Route path="/farmers/:id" element={<Layout title="Farmer Details"><FarmerDetails /></Layout>} />
+          <Route path="/settings" element={<Layout title="Settings"><Settings /></Layout>} />
         </Routes>
         
         <ToastContainer
