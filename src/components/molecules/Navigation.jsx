@@ -5,10 +5,16 @@ import ApperIcon from "@/components/ApperIcon";
 
 const Navigation = ({ isMobile = false, onItemClick }) => {
   const navigationItems = [
-    {
+{
       label: "Dashboard",
       path: "/",
       icon: "LayoutDashboard",
+      color: "text-primary-600"
+    },
+    {
+      label: "Farms",
+      path: "/farms",
+      icon: "Tractor",
       color: "text-primary-600"
     },
     {
