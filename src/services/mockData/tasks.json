@@ -1,0 +1,90 @@
+[
+  {
+    "Id": 1,
+    "farmId": "1",
+    "cropId": 1,
+    "title": "Water corn field",
+    "description": "Deep watering for sweet corn section A",
+    "dueDate": "2024-07-25T08:00:00.000Z",
+    "priority": "medium",
+    "completed": false,
+    "completedAt": null
+  },
+  {
+    "Id": 2,
+    "farmId": "1",
+    "cropId": 2,
+    "title": "Apply fertilizer to soybeans",
+    "description": "Second fertilizer application for non-GMO soybeans",
+    "dueDate": "2024-07-22T08:00:00.000Z",
+    "priority": "high",
+    "completed": false,
+    "completedAt": null
+  },
+  {
+    "Id": 3,
+    "farmId": "1",
+    "cropId": 3,
+    "title": "Harvest wheat",
+    "description": "Winter wheat is ready for harvest",
+    "dueDate": "2024-07-30T08:00:00.000Z",
+    "priority": "high",
+    "completed": false,
+    "completedAt": null
+  },
+  {
+    "Id": 4,
+    "farmId": "1",
+    "cropId": null,
+    "title": "Repair irrigation system",
+    "description": "Fix broken sprinkler head in zone 3",
+    "dueDate": "2024-07-23T08:00:00.000Z",
+    "priority": "high",
+    "completed": false,
+    "completedAt": null
+  },
+  {
+    "Id": 5,
+    "farmId": "1",
+    "cropId": 4,
+    "title": "Prune tomato plants",
+    "description": "Remove suckers and lower leaves",
+    "dueDate": "2024-07-20T08:00:00.000Z",
+    "priority": "medium",
+    "completed": true,
+    "completedAt": "2024-07-19T14:30:00.000Z"
+  },
+  {
+    "Id": 6,
+    "farmId": "1",
+    "cropId": null,
+    "title": "Weekly equipment maintenance",
+    "description": "Check tractor fluids and tire pressure",
+    "dueDate": "2024-07-26T08:00:00.000Z",
+    "priority": "low",
+    "completed": false,
+    "completedAt": null
+  },
+  {
+    "Id": 7,
+    "farmId": "1",
+    "cropId": 1,
+    "title": "Check corn for pests",
+    "description": "Look for corn borer damage and aphids",
+    "dueDate": "2024-07-24T08:00:00.000Z",
+    "priority": "medium",
+    "completed": false,
+    "completedAt": null
+  },
+  {
+    "Id": 8,
+    "farmId": "1",
+    "cropId": 5,
+    "title": "Store harvested potatoes",
+    "description": "Move potatoes to cold storage facility",
+    "dueDate": "2024-07-02T08:00:00.000Z",
+    "priority": "high",
+    "completed": true,
+    "completedAt": "2024-07-01T16:45:00.000Z"
+  }
+]
