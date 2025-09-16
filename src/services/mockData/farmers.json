@@ -1,0 +1,122 @@
+[
+  {
+    "Id": 1,
+    "name": "John Anderson",
+    "email": "john.anderson@farmmail.com",
+    "phone": "+1 (555) 123-4567",
+    "dateOfBirth": "1975-08-15",
+    "address": "1425 Rural Route 12, Springfield, IL 62702",
+    "farmName": "Anderson Family Farm",
+    "farmSize": 450,
+    "farmLocation": "Springfield, Illinois",
+    "primaryCrops": ["Corn", "Soybeans", "Wheat"],
+    "experience": 25,
+    "status": "active",
+    "memberSince": "2019-03-15T08:00:00Z",
+    "stats": {
+      "totalFarms": 2,
+      "activeCrops": 3,
+      "pendingTasks": 5
+    }
+  },
+  {
+    "Id": 2,
+    "name": "Maria Rodriguez",
+    "email": "maria.rodriguez@greenacres.com",
+    "phone": "+1 (555) 234-5678",
+    "dateOfBirth": "1982-12-03",
+    "address": "789 County Road 45, Bakersfield, CA 93308",
+    "farmName": "Rodriguez Green Acres",
+    "farmSize": 320,
+    "farmLocation": "Bakersfield, California",
+    "primaryCrops": ["Tomatoes", "Peppers", "Lettuce"],
+    "experience": 18,
+    "status": "active",
+    "memberSince": "2020-07-22T09:30:00Z",
+    "stats": {
+      "totalFarms": 1,
+      "activeCrops": 3,
+      "pendingTasks": 2
+    }
+  },
+  {
+    "Id": 3,
+    "name": "Robert Thompson",
+    "email": "bob.thompson@prairielands.net",
+    "phone": "+1 (555) 345-6789",
+    "dateOfBirth": "1968-05-20",
+    "address": "2156 Prairie View Drive, Omaha, NE 68102",
+    "farmName": "Thompson Prairie Lands",
+    "farmSize": 680,
+    "farmLocation": "Omaha, Nebraska",
+    "primaryCrops": ["Corn", "Soybeans"],
+    "experience": 32,
+    "status": "active",
+    "memberSince": "2018-01-10T07:45:00Z",
+    "stats": {
+      "totalFarms": 3,
+      "activeCrops": 2,
+      "pendingTasks": 8
+    }
+  },
+  {
+    "Id": 4,
+    "name": "Sarah Mitchell",
+    "email": "sarah.mitchell@organicfarms.com",
+    "phone": "+1 (555) 456-7890",
+    "dateOfBirth": "1985-09-12",
+    "address": "567 Hillside Road, Portland, OR 97201",
+    "farmName": "Mitchell Organic Farm",
+    "farmSize": 180,
+    "farmLocation": "Portland, Oregon",
+    "primaryCrops": ["Kale", "Carrots", "Beets", "Spinach"],
+    "experience": 12,
+    "status": "active",
+    "memberSince": "2021-05-08T10:15:00Z",
+    "stats": {
+      "totalFarms": 1,
+      "activeCrops": 4,
+      "pendingTasks": 3
+    }
+  },
+  {
+    "Id": 5,
+    "name": "David Chen",
+    "email": "david.chen@ricevalley.com",
+    "phone": "+1 (555) 567-8901",
+    "dateOfBirth": "1979-03-28",
+    "address": "834 Valley Road, Sacramento, CA 95814",
+    "farmName": "Chen Rice Valley",
+    "farmSize": 520,
+    "farmLocation": "Sacramento, California",
+    "primaryCrops": ["Rice", "Almonds"],
+    "experience": 20,
+    "status": "active",
+    "memberSince": "2019-11-12T11:20:00Z",
+    "stats": {
+      "totalFarms": 2,
+      "activeCrops": 2,
+      "pendingTasks": 4
+    }
+  },
+  {
+    "Id": 6,
+    "name": "Linda Williams",
+    "email": "linda.williams@sunnyslope.net",
+    "phone": "+1 (555) 678-9012",
+    "dateOfBirth": "1973-07-06",
+    "address": "1293 Sunny Slope Lane, Phoenix, AZ 85001",
+    "farmName": "Williams Sunny Slope Farm",
+    "farmSize": 275,
+    "farmLocation": "Phoenix, Arizona",
+    "primaryCrops": ["Cotton", "Citrus"],
+    "experience": 28,
+    "status": "inactive",
+    "memberSince": "2017-09-03T06:30:00Z",
+    "stats": {
+      "totalFarms": 1,
+      "activeCrops": 2,
+      "pendingTasks": 1
+    }
+  }
+]

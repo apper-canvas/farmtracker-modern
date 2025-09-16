@@ -11,10 +11,16 @@ const Navigation = ({ isMobile = false, onItemClick }) => {
       icon: "LayoutDashboard",
       color: "text-primary-600"
     },
-    {
+{
       label: "Farms",
       path: "/farms",
       icon: "Tractor",
+      color: "text-primary-600"
+    },
+    {
+      label: "Farmers",
+      path: "/farmers",
+      icon: "Users",
       color: "text-primary-600"
     },
     {

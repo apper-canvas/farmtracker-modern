@@ -1,16 +1,17 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-
-// Pages
-import Dashboard from "@/components/pages/Dashboard";
+import FarmerDetails from "@/components/pages/FarmerDetails";
 import Farms from "@/components/pages/Farms";
-import Crops from "@/components/pages/Crops";
 import Tasks from "@/components/pages/Tasks";
 import Weather from "@/components/pages/Weather";
 import Finances from "@/components/pages/Finances";
+import Dashboard from "@/components/pages/Dashboard";
+import Crops from "@/components/pages/Crops";
 import Settings from "@/components/pages/Settings";
 
+// Pages
+// Pages
 function App() {
   return (
     <BrowserRouter>
@@ -22,6 +23,7 @@ function App() {
           <Route path="/tasks" element={<Tasks />} />
           <Route path="/weather" element={<Weather />} />
           <Route path="/finances" element={<Finances />} />
+          <Route path="/farmers/:id" element={<FarmerDetails />} />
           <Route path="/settings" element={<Settings />} />
         </Routes>
         
