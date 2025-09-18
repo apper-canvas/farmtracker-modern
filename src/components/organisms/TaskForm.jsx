@@ -4,18 +4,26 @@ import { format } from "date-fns";
 import Button from "@/components/atoms/Button";
 import Input from "@/components/atoms/Input";
 import Select from "@/components/atoms/Select";
+import RangeInput from "@/components/atoms/RangeInput";
+import Checkbox from "@/components/atoms/Checkbox";
+import RadioGroup from "@/components/atoms/RadioGroup";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/Card";
 import ApperIcon from "@/components/ApperIcon";
 import { taskService } from "@/services/api/taskService";
 import { cropService } from "@/services/api/cropService";
 
 const TaskForm = ({ task, onSave, onCancel }) => {
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     title: "",
     description: "",
     dueDate: "",
     priority: "medium",
-    cropId: ""
+    cropId: "",
+    range_c: "",
+    tags: "",
+    checkbox_c: false,
+    radio_c: "",
+    website_c: ""
   });
   
   const [errors, setErrors] = useState({});
@@ -34,12 +42,17 @@ const TaskForm = ({ task, onSave, onCancel }) => {
 
   useEffect(() => {
     if (task) {
-      setFormData({
+setFormData({
         title: task.title || "",
         description: task.description || "",
         dueDate: task.dueDate ? format(new Date(task.dueDate), "yyyy-MM-dd") : "",
         priority: task.priority || "medium",
-        cropId: task.cropId?.toString() || ""
+        cropId: task.cropId?.toString() || "",
+        range_c: task.range_c || "",
+        tags: Array.isArray(task.tags) ? task.tags.join(", ") : task.tags || "",
+        checkbox_c: Boolean(task.checkbox_c),
+        radio_c: task.radio_c || "",
+        website_c: task.website_c || ""
       });
     }
   }, [task]);
@@ -69,7 +82,7 @@ const TaskForm = ({ task, onSave, onCancel }) => {
     }
   };
 
-  const validateForm = () => {
+const validateForm = () => {
     const newErrors = {};
     
     if (!formData.title.trim()) {
@@ -78,6 +91,13 @@ const TaskForm = ({ task, onSave, onCancel }) => {
     
     if (!formData.dueDate) {
       newErrors.dueDate = "Due date is required";
+    }
+
+    if (formData.website_c && formData.website_c.trim()) {
+      const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+      if (!urlPattern.test(formData.website_c.trim())) {
+        newErrors.website_c = "Please enter a valid website URL";
+      }
     }
 
     setErrors(newErrors);
@@ -95,13 +115,18 @@ const TaskForm = ({ task, onSave, onCancel }) => {
     setLoading(true);
     
     try {
-      const taskData = {
+const taskData = {
         ...formData,
         dueDate: new Date(formData.dueDate).toISOString(),
         cropId: formData.cropId ? parseInt(formData.cropId) : null,
         farmId: "1", // Default farm ID
         completed: task ? task.completed : false,
-        completedAt: task ? task.completedAt : null
+        completedAt: task ? task.completedAt : null,
+        range_c: formData.range_c,
+        tags: formData.tags,
+        checkbox_c: formData.checkbox_c,
+        radio_c: formData.radio_c,
+        website_c: formData.website_c
       };
 
       let savedTask;
@@ -190,7 +215,65 @@ const TaskForm = ({ task, onSave, onCancel }) => {
               </option>
             ))}
           </Select>
+<div className="space-y-4 pt-4 border-t border-gray-200">
+            <h3 className="text-lg font-medium text-gray-900">Additional Task Details</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <RangeInput
+                label="Range"
+                name="range_c"
+                value={formData.range_c}
+                onChange={handleChange}
+                min={0}
+                max={10}
+                step={1}
+                placeholder="Set min-max range"
+              />
 
+              <Input
+                label="Tags"
+                name="tags"
+                value={formData.tags}
+                onChange={handleChange}
+                placeholder="tag1, tag2, tag3"
+                helperText="Separate tags with commas"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <Checkbox
+                  name="checkbox_c"
+                  checked={formData.checkbox_c}
+                  onChange={(checked) => setFormData(prev => ({ ...prev, checkbox_c: checked }))}
+                  label="Checkbox Option"
+                />
+              </div>
+
+              <RadioGroup
+                label="Radio Selection"
+                name="radio_c"
+                value={formData.radio_c}
+                onChange={handleChange}
+                options={[
+                  { value: "option1", label: "Option 1" },
+                  { value: "option2", label: "Option 2" },
+                  { value: "option3", label: "Option 3" }
+                ]}
+              />
+            </div>
+
+            <Input
+              type="url"
+              label="Website"
+              name="website_c"
+              value={formData.website_c}
+              onChange={handleChange}
+              error={errors.website_c}
+              placeholder="https://example.com"
+              helperText="Enter a valid website URL"
+            />
+          </div>
           <div className="flex gap-3 pt-4">
             <Button
               type="submit"
