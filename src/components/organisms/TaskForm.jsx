@@ -23,7 +23,8 @@ const [formData, setFormData] = useState({
     tags: "",
     checkbox_c: false,
     radio_c: "",
-    website_c: ""
+    website_c: "",
+    internalExternal: ""
   });
   
   const [errors, setErrors] = useState({});
@@ -52,7 +53,8 @@ setFormData({
         tags: Array.isArray(task.tags) ? task.tags.join(", ") : task.tags || "",
         checkbox_c: Boolean(task.checkbox_c),
         radio_c: task.radio_c || "",
-        website_c: task.website_c || ""
+        website_c: task.website_c || "",
+        internalExternal: task.internalExternal || ""
       });
     }
   }, [task]);
@@ -66,7 +68,7 @@ setFormData({
     }
   };
 
-  const handleChange = (e) => {
+const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -104,7 +106,7 @@ const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -115,7 +117,7 @@ const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
     setLoading(true);
     
     try {
-const taskData = {
+      const taskData = {
         ...formData,
         dueDate: new Date(formData.dueDate).toISOString(),
         cropId: formData.cropId ? parseInt(formData.cropId) : null,
@@ -126,7 +128,8 @@ const taskData = {
         tags: formData.tags,
         checkbox_c: formData.checkbox_c,
         radio_c: formData.radio_c,
-        website_c: formData.website_c
+        website_c: formData.website_c,
+        internalExternal: formData.internalExternal
       };
 
       let savedTask;
@@ -214,7 +217,24 @@ const taskData = {
                 {crop.name} {crop.variety ? `(${crop.variety})` : ""}
               </option>
             ))}
-          </Select>
+</Select>
+
+          {/* Internal/External Tag */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Task Type
+            </label>
+            <Select
+              name="internalExternal"
+              value={formData.internalExternal}
+              onChange={handleChange}
+              className="w-full"
+            >
+              <option value="">Select task type</option>
+              <option value="internal">Internal</option>
+              <option value="external">External</option>
+            </Select>
+          </div>
 <div className="space-y-4 pt-4 border-t border-gray-200">
             <h3 className="text-lg font-medium text-gray-900">Additional Task Details</h3>
             

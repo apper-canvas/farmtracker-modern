@@ -1,3 +1,5 @@
+import React from "react";
+import Error from "@/components/ui/Error";
 class TaskService {
   constructor() {
     const { ApperClient } = window.ApperSDK;
@@ -10,7 +12,7 @@ class TaskService {
 
   async getAll() {
     try {
-      const params = {
+const params = {
         fields: [
           {"field": {"Name": "Name"}},
           {"field": {"Name": "title_c"}},
@@ -20,7 +22,8 @@ class TaskService {
           {"field": {"Name": "completed_c"}},
           {"field": {"Name": "completed_at_c"}},
           {"field": {"Name": "farm_id_c"}},
-          {"field": {"Name": "crop_id_c"}}
+          {"field": {"Name": "crop_id_c"}},
+          {"field": {"Name": "internal_external_c"}}
         ]
       };
       
@@ -32,7 +35,7 @@ class TaskService {
       }
       
       // Transform data for UI compatibility
-      return response.data.map(task => ({
+return response.data.map(task => ({
         Id: task.Id,
         title: task.title_c || task.Name,
         description: task.description_c,
@@ -41,7 +44,8 @@ class TaskService {
         completed: task.completed_c,
         completedAt: task.completed_at_c,
         farmId: task.farm_id_c?.Id || task.farm_id_c,
-        cropId: task.crop_id_c?.Id || task.crop_id_c
+        cropId: task.crop_id_c?.Id || task.crop_id_c,
+        internalExternal: task.internal_external_c
       }));
     } catch (error) {
       console.error("Error fetching tasks:", error);
@@ -57,7 +61,7 @@ class TaskService {
       }
 
       const params = {
-        fields: [
+fields: [
           {"field": {"Name": "Name"}},
           {"field": {"Name": "title_c"}},
           {"field": {"Name": "description_c"}},
@@ -66,7 +70,8 @@ class TaskService {
           {"field": {"Name": "completed_c"}},
           {"field": {"Name": "completed_at_c"}},
           {"field": {"Name": "farm_id_c"}},
-          {"field": {"Name": "crop_id_c"}}
+          {"field": {"Name": "crop_id_c"}},
+          {"field": {"Name": "internal_external_c"}}
         ]
       };
 
@@ -77,7 +82,7 @@ class TaskService {
       }
 
       const task = response.data;
-      return {
+return {
         Id: task.Id,
         title: task.title_c || task.Name,
         description: task.description_c,
@@ -86,7 +91,8 @@ class TaskService {
         completed: task.completed_c,
         completedAt: task.completed_at_c,
         farmId: task.farm_id_c?.Id || task.farm_id_c,
-        cropId: task.crop_id_c?.Id || task.crop_id_c
+        cropId: task.crop_id_c?.Id || task.crop_id_c,
+        internalExternal: task.internal_external_c
       };
     } catch (error) {
       console.error(`Error fetching task ${id}:`, error);
@@ -96,7 +102,7 @@ class TaskService {
 
   async create(taskData) {
     try {
-      const params = {
+const params = {
         records: [{
           Name: taskData.title,
           title_c: taskData.title,
@@ -106,7 +112,8 @@ class TaskService {
           completed_c: taskData.completed || false,
           completed_at_c: taskData.completedAt || null,
           farm_id_c: taskData.farmId ? parseInt(taskData.farmId) : null,
-          crop_id_c: taskData.cropId ? parseInt(taskData.cropId) : null
+          crop_id_c: taskData.cropId ? parseInt(taskData.cropId) : null,
+          internal_external_c: taskData.internalExternal || null
         }]
       };
 
@@ -131,13 +138,14 @@ class TaskService {
           return {
             Id: task.Id,
             title: task.title_c || task.Name,
-            description: task.description_c,
+description: task.description_c,
             dueDate: task.due_date_c,
             priority: task.priority_c,
             completed: task.completed_c,
             completedAt: task.completed_at_c,
             farmId: task.farm_id_c?.Id || task.farm_id_c,
-            cropId: task.crop_id_c?.Id || task.crop_id_c
+            cropId: task.crop_id_c?.Id || task.crop_id_c,
+            internalExternal: task.internal_external_c
           };
         }
       }
@@ -158,7 +166,7 @@ class TaskService {
 
       const params = {
         records: [{
-          Id: taskId,
+Id: taskId,
           Name: taskData.title,
           title_c: taskData.title,
           description_c: taskData.description,
@@ -167,7 +175,8 @@ class TaskService {
           completed_c: taskData.completed,
           completed_at_c: taskData.completedAt,
           farm_id_c: taskData.farmId ? parseInt(taskData.farmId) : null,
-          crop_id_c: taskData.cropId ? parseInt(taskData.cropId) : null
+          crop_id_c: taskData.cropId ? parseInt(taskData.cropId) : null,
+          internal_external_c: taskData.internalExternal || null
         }]
       };
 
@@ -188,7 +197,7 @@ class TaskService {
         }
         
         if (successful.length > 0) {
-          const task = successful[0].data;
+const task = successful[0].data;
           return {
             Id: task.Id,
             title: task.title_c || task.Name,
@@ -198,7 +207,8 @@ class TaskService {
             completed: task.completed_c,
             completedAt: task.completed_at_c,
             farmId: task.farm_id_c?.Id || task.farm_id_c,
-            cropId: task.crop_id_c?.Id || task.crop_id_c
+            cropId: task.crop_id_c?.Id || task.crop_id_c,
+            internalExternal: task.internal_external_c
           };
         }
       }
