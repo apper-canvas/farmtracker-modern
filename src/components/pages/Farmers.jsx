@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { toast } from 'react-toastify';
-import ApperIcon from '@/components/ApperIcon';
-import Button from '@/components/atoms/Button';
-import Input from '@/components/atoms/Input';
-import Select from '@/components/atoms/Select';
-import { Card } from '@/components/atoms/Card';
-import Badge from '@/components/atoms/Badge';
-import Loading from '@/components/ui/Loading';
-import Error from '@/components/ui/Error';
-import Empty from '@/components/ui/Empty';
-import { farmerService } from '@/services/api/farmerService';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { Card } from "@/components/atoms/Card";
+import { farmerService } from "@/services/api/farmerService";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
+import Input from "@/components/atoms/Input";
+import Select from "@/components/atoms/Select";
+import Checkbox from "@/components/atoms/Checkbox";
+import Crops from "@/components/pages/Crops";
+import Loading from "@/components/ui/Loading";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
 
 const Farmers = () => {
   const navigate = useNavigate();
@@ -23,11 +25,11 @@ const Farmers = () => {
   const [sortBy, setSortBy] = useState('name');
   const [showModal, setShowModal] = useState(false);
   const [editingFarmer, setEditingFarmer] = useState(null);
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-dateOfBirth: '',
+    dateOfBirth: '',
     gender: '',
     address: '',
     farmName: '',
@@ -35,7 +37,8 @@ dateOfBirth: '',
     farmSize: '',
     experience: '',
     primaryCrops: [],
-    status: 'active'
+    status: 'active',
+    tags: []
   });
 
   useEffect(() => {
@@ -58,7 +61,7 @@ dateOfBirth: '',
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+e.preventDefault();
     try {
       const submitData = {
         ...formData,
@@ -66,7 +69,10 @@ dateOfBirth: '',
         experience: parseInt(formData.experience),
         primaryCrops: typeof formData.primaryCrops === 'string' 
           ? formData.primaryCrops.split(',').map(crop => crop.trim()).filter(crop => crop)
-          : formData.primaryCrops
+          : formData.primaryCrops,
+        tags: Array.isArray(formData.tags) 
+          ? formData.tags.join(',')
+          : formData.tags
       };
 
       if (editingFarmer) {
@@ -107,14 +113,15 @@ dateOfBirth: '',
       email: farmer.email,
       phone: farmer.phone,
 dateOfBirth: farmer.dateOfBirth ? farmer.dateOfBirth.split('T')[0] : '',
-      gender: farmer.gender || '',
-      address: farmer.address,
-      farmName: farmer.farmName,
-      farmLocation: farmer.farmLocation,
-      farmSize: farmer.farmSize.toString(),
-      experience: farmer.experience.toString(),
-      primaryCrops: farmer.primaryCrops.join(', '),
-      status: farmer.status
+        gender: farmer.gender || '',
+        address: farmer.address,
+        farmName: farmer.farmName,
+        farmLocation: farmer.farmLocation,
+        farmSize: farmer.farmSize.toString(),
+        experience: farmer.experience.toString(),
+        primaryCrops: farmer.primaryCrops.join(', '),
+        status: farmer.status,
+        tags: farmer.tags ? (typeof farmer.tags === 'string' ? farmer.tags.split(',') : farmer.tags) : []
     });
     setShowModal(true);
   };
@@ -125,8 +132,8 @@ dateOfBirth: farmer.dateOfBirth ? farmer.dateOfBirth.split('T')[0] : '',
     setFormData({
       name: '',
       email: '',
-      phone: '',
-dateOfBirth: '',
+phone: '',
+      dateOfBirth: '',
       gender: '',
       address: '',
       farmName: '',
@@ -134,7 +141,8 @@ dateOfBirth: '',
       farmSize: '',
       experience: '',
       primaryCrops: [],
-      status: 'active'
+      status: 'active',
+      tags: []
     });
   };
 
@@ -503,6 +511,27 @@ dateOfBirth: '',
                     placeholder="Enter crops separated by commas (e.g., Wheat, Corn, Soybeans)"
                   />
                   <p className="text-xs text-gray-500 mt-1">Separate multiple crops with commas</p>
+                </div>
+
+<div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Tags
+                  </label>
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    {['Organic', 'Sustainable', 'Local Market', 'Export', 'Family Farm', 'Commercial'].map((tag) => (
+                      <Checkbox
+                        key={tag}
+                        name="tags"
+                        value={formData.tags}
+                        label={tag}
+                        onChange={(e) => setFormData(prev => ({
+                          ...prev,
+                          tags: e.target.value
+                        }))}
+                        className="text-primary-500 focus:ring-primary-500"
+                      />
+                    ))}
+                  </div>
                 </div>
 
                 <div>

@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { toast } from 'react-toastify';
-import ApperIcon from '@/components/ApperIcon';
-import Button from '@/components/atoms/Button';
-import Input from '@/components/atoms/Input';
-import Select from '@/components/atoms/Select';
-import { Card } from '@/components/atoms/Card';
-import Badge from '@/components/atoms/Badge';
-import Loading from '@/components/ui/Loading';
-import Error from '@/components/ui/Error';
-import Empty from '@/components/ui/Empty';
-import { farmService } from '@/services/api/farmService';
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { Card } from "@/components/atoms/Card";
+import { farmService } from "@/services/api/farmService";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
+import Input from "@/components/atoms/Input";
+import Select from "@/components/atoms/Select";
+import Checkbox from "@/components/atoms/Checkbox";
+import Loading from "@/components/ui/Loading";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
 
 const Farms = () => {
   const [farms, setFarms] = useState([]);
@@ -392,34 +393,25 @@ location: '',
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Type of Farms
+<label className="block text-sm font-medium text-gray-700 mb-2">
+                    Farm Types *
                   </label>
                   <div className="grid grid-cols-2 gap-2">
-                    {['Crop Production', 'Livestock', 'Dairy', 'Poultry', 'Organic', 'Mixed'].map((type) => (
-                      <label key={type} className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={formData.farmTypes.includes(type)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setFormData(prev => ({
-                                ...prev,
-                                farmTypes: [...prev.farmTypes, type]
-                              }));
-                            } else {
-                              setFormData(prev => ({
-                                ...prev,
-                                farmTypes: prev.farmTypes.filter(t => t !== type)
-                              }));
-                            }
-                          }}
-                          className="rounded border-gray-300 text-primary-500 focus:ring-primary-500"
-                        />
-                        <span className="text-sm text-gray-700">{type}</span>
-                      </label>
+                    {['Crop Production', 'Mixed', 'Organic', 'Livestock'].map((type) => (
+                      <Checkbox
+                        key={type}
+                        name="farmTypes"
+                        value={formData.farmTypes}
+                        label={type}
+                        onChange={(e) => setFormData(prev => ({
+                          ...prev,
+                          farmTypes: e.target.value
+                        }))}
+                        className="text-primary-500 focus:ring-primary-500"
+                      />
                     ))}
                   </div>
+                  <p className="text-xs text-gray-500 mt-1">Select all applicable farm types</p>
                 </div>
 
                 <div>
