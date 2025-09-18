@@ -27,7 +27,8 @@ const Farmers = () => {
     name: '',
     email: '',
     phone: '',
-    dateOfBirth: '',
+dateOfBirth: '',
+    gender: '',
     address: '',
     farmName: '',
     farmLocation: '',
@@ -105,7 +106,8 @@ const Farmers = () => {
       name: farmer.name,
       email: farmer.email,
       phone: farmer.phone,
-      dateOfBirth: farmer.dateOfBirth ? farmer.dateOfBirth.split('T')[0] : '',
+dateOfBirth: farmer.dateOfBirth ? farmer.dateOfBirth.split('T')[0] : '',
+      gender: farmer.gender || '',
       address: farmer.address,
       farmName: farmer.farmName,
       farmLocation: farmer.farmLocation,
@@ -124,7 +126,8 @@ const Farmers = () => {
       name: '',
       email: '',
       phone: '',
-      dateOfBirth: '',
+dateOfBirth: '',
+      gender: '',
       address: '',
       farmName: '',
       farmLocation: '',
@@ -400,6 +403,21 @@ const Farmers = () => {
                       onChange={(e) => setFormData(prev => ({...prev, dateOfBirth: e.target.value}))}
                       placeholder="Select date of birth"
                     />
+</div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Gender
+                    </label>
+                    <Select
+                      value={formData.gender}
+                      onChange={(e) => setFormData(prev => ({ ...prev, gender: e.target.value }))}
+                      className="w-full"
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="Male">Male</option>
+                      <option value="Female">Female</option>
+                      <option value="Other">Other</option>
+                    </Select>
                   </div>
                 </div>
 

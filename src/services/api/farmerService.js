@@ -20,7 +20,7 @@ export const farmerService = {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 400));
     
-    const newFarmer = {
+const newFarmer = {
       ...farmerData,
       Id: Math.max(...farmers.map(f => f.Id), 0) + 1,
       memberSince: new Date().toISOString(),
@@ -45,7 +45,7 @@ export const farmerService = {
       throw new Error('Farmer not found');
     }
     
-    farmers[index] = { ...farmers[index], ...updateData };
+farmers[index] = { ...farmers[index], ...updateData };
     return { ...farmers[index] };
   },
 
