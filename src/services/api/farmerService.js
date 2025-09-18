@@ -25,10 +25,11 @@ class FarmerService {
           {"field": {"Name": "experience_c"}},
           {"field": {"Name": "primary_crops_c"}},
           {"field": {"Name": "status_c"}},
-          {"field": {"Name": "member_since_c"}},
+{"field": {"Name": "member_since_c"}},
           {"field": {"Name": "total_farms_c"}},
           {"field": {"Name": "active_crops_c"}},
-          {"field": {"Name": "pending_tasks_c"}}
+          {"field": {"Name": "pending_tasks_c"}},
+          {"field": {"Name": "Tags"}}
         ]
       };
       
@@ -56,10 +57,11 @@ class FarmerService {
         status: farmer.status_c,
         memberSince: farmer.member_since_c,
         stats: {
-          totalFarms: farmer.total_farms_c || 1,
+totalFarms: farmer.total_farms_c || 1,
           activeCrops: farmer.active_crops_c || 0,
           pendingTasks: farmer.pending_tasks_c || 0
-        }
+        },
+        tags: farmer.Tags ? farmer.Tags.split(',').map(t => t.trim()) : []
       }));
     } catch (error) {
       console.error("Error fetching farmers:", error);
@@ -90,9 +92,10 @@ class FarmerService {
           {"field": {"Name": "primary_crops_c"}},
           {"field": {"Name": "status_c"}},
           {"field": {"Name": "member_since_c"}},
-          {"field": {"Name": "total_farms_c"}},
+{"field": {"Name": "total_farms_c"}},
           {"field": {"Name": "active_crops_c"}},
-          {"field": {"Name": "pending_tasks_c"}}
+          {"field": {"Name": "pending_tasks_c"}},
+          {"field": {"Name": "Tags"}}
         ]
       };
 
@@ -119,10 +122,11 @@ class FarmerService {
         status: farmer.status_c,
         memberSince: farmer.member_since_c,
         stats: {
-          totalFarms: farmer.total_farms_c || 1,
+totalFarms: farmer.total_farms_c || 1,
           activeCrops: farmer.active_crops_c || 0,
           pendingTasks: farmer.pending_tasks_c || 0
-        }
+        },
+        tags: farmer.Tags ? farmer.Tags.split(',').map(t => t.trim()) : []
       };
     } catch (error) {
       console.error(`Error fetching farmer ${id}:`, error);
@@ -150,9 +154,12 @@ class FarmerService {
             : farmerData.primaryCrops,
           status_c: farmerData.status || 'active',
           member_since_c: new Date().toISOString(),
-          total_farms_c: 1,
+total_farms_c: 1,
           active_crops_c: Array.isArray(farmerData.primaryCrops) ? farmerData.primaryCrops.length : 0,
-          pending_tasks_c: 0
+          pending_tasks_c: 0,
+          Tags: Array.isArray(farmerData.tags) 
+            ? farmerData.tags.join(',')
+            : farmerData.tags || ''
         }]
       };
 
@@ -190,10 +197,11 @@ class FarmerService {
             status: farmer.status_c,
             memberSince: farmer.member_since_c,
             stats: {
-              totalFarms: farmer.total_farms_c || 1,
+totalFarms: farmer.total_farms_c || 1,
               activeCrops: farmer.active_crops_c || 0,
               pendingTasks: farmer.pending_tasks_c || 0
-            }
+            },
+            tags: farmer.Tags ? farmer.Tags.split(',').map(t => t.trim()) : []
           };
         }
       }
@@ -229,8 +237,11 @@ class FarmerService {
           primary_crops_c: Array.isArray(farmerData.primaryCrops) 
             ? farmerData.primaryCrops.join(', ') 
             : farmerData.primaryCrops,
-          status_c: farmerData.status,
-          active_crops_c: Array.isArray(farmerData.primaryCrops) ? farmerData.primaryCrops.length : 0
+status_c: farmerData.status,
+          active_crops_c: Array.isArray(farmerData.primaryCrops) ? farmerData.primaryCrops.length : 0,
+          Tags: Array.isArray(farmerData.tags) 
+            ? farmerData.tags.join(',')
+            : farmerData.tags || ''
         }]
       };
 
@@ -268,13 +279,13 @@ class FarmerService {
             status: farmer.status_c,
             memberSince: farmer.member_since_c,
             stats: {
-              totalFarms: farmer.total_farms_c || 1,
+totalFarms: farmer.total_farms_c || 1,
               activeCrops: farmer.active_crops_c || 0,
               pendingTasks: farmer.pending_tasks_c || 0
-            }
+            },
+            tags: farmer.Tags ? farmer.Tags.split(',').map(t => t.trim()) : []
           };
         }
-      }
       
       throw new Error('Farmer update failed');
     } catch (error) {
