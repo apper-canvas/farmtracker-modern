@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { format } from "date-fns";
-import Layout from "@/components/organisms/Layout";
-import CropForm from "@/components/organisms/CropForm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import Badge from "@/components/atoms/Badge";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
 import { cropService } from "@/services/api/cropService";
 import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Badge from "@/components/atoms/Badge";
+import CropForm from "@/components/organisms/CropForm";
+import Loading from "@/components/ui/Loading";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
 
 const Crops = () => {
   const [crops, setCrops] = useState([]);
@@ -97,11 +96,11 @@ const Crops = () => {
     }
   };
 
-  if (loading) return <Layout title="Crops"><Loading type="table" /></Layout>;
-  if (error) return <Layout title="Crops"><Error message={error} onRetry={loadCrops} /></Layout>;
+if (loading) return <Loading type="table" />;
+  if (error) return <Error message={error} onRetry={loadCrops} />;
 
   return (
-    <Layout title="Crops">
+<div>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -239,7 +238,7 @@ const Crops = () => {
           </CardContent>
         </Card>
       </div>
-    </Layout>
+</div>
   );
 };
 

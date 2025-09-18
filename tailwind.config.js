@@ -4,8 +4,11 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
-  theme: {
+theme: {
     extend: {
+      spacing: {
+        '128': '32rem',
+      },
       colors: {
         primary: {
           50: '#f0f9ff',

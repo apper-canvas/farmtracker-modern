@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Layout from "@/components/organisms/Layout";
-import TaskForm from "@/components/organisms/TaskForm";
-import TaskItem from "@/components/molecules/TaskItem";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/Card";
-import Button from "@/components/atoms/Button";
-import Select from "@/components/atoms/Select";
-import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
-import Empty from "@/components/ui/Empty";
-import ApperIcon from "@/components/ApperIcon";
 import { taskService } from "@/services/api/taskService";
 import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Select from "@/components/atoms/Select";
+import TaskForm from "@/components/organisms/TaskForm";
+import Loading from "@/components/ui/Loading";
+import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import TaskItem from "@/components/molecules/TaskItem";
 
 const Tasks = () => {
   const [tasks, setTasks] = useState([]);
@@ -127,11 +126,11 @@ const Tasks = () => {
     { value: "high", label: "High Priority" }
   ];
 
-  if (loading) return <Layout title="Tasks"><Loading /></Layout>;
-  if (error) return <Layout title="Tasks"><Error message={error} onRetry={loadTasks} /></Layout>;
+if (loading) return <Loading />;
+  if (error) return <Error message={error} onRetry={loadTasks} />;
 
   return (
-    <Layout title="Tasks">
+<div>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -263,7 +262,7 @@ const Tasks = () => {
           </div>
         )}
       </div>
-    </Layout>
+</div>
   );
 };
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import SubSidebar from "@/components/organisms/SubSidebar";
 import { ToastContainer } from "react-toastify";
 import FarmerDetails from "@/components/pages/FarmerDetails";
 import Farmers from "@/components/pages/Farmers";
@@ -22,8 +23,8 @@ function App() {
 <Route path="/" element={<Layout title="Dashboard"><Dashboard /></Layout>} />
           <Route path="/farmers" element={<Layout title="Farmers"><Farmers /></Layout>} />
 <Route path="/farms" element={<Layout title="Farms"><Farms /></Layout>} />
-          <Route path="/crops" element={<Layout title="Crops"><Crops /></Layout>} />
-          <Route path="/tasks" element={<Layout title="Tasks"><Tasks /></Layout>} />
+<Route path="/crops" element={<Layout title="Crops" subSidebar={<SubSidebar type="crops" />}><Crops /></Layout>} />
+          <Route path="/tasks" element={<Layout title="Tasks" subSidebar={<SubSidebar type="tasks" />}><Tasks /></Layout>} />
           <Route path="/weather" element={<Layout title="Weather"><Weather /></Layout>} />
           <Route path="/finances" element={<Layout title="Finances"><Finances /></Layout>} />
           <Route path="/farmers/:id" element={<Layout title="Farmer Details"><FarmerDetails /></Layout>} />
