@@ -94,7 +94,7 @@ const validateForm = () => {
     }
 
     if (formData.website_c && formData.website_c.trim()) {
-      const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+const urlPattern = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/;
       if (!urlPattern.test(formData.website_c.trim())) {
         newErrors.website_c = "Please enter a valid website URL";
       }
