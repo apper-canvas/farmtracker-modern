@@ -6,40 +6,6 @@ const SubSidebar = ({ type }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-const dashboardMenuItems = [
-    { name: 'Overview', path: '/', icon: 'LayoutDashboard' },
-    { name: 'Analytics', path: '/dashboard/analytics', icon: 'TrendingUp' },
-    { name: 'Reports', path: '/dashboard/reports', icon: 'FileText' },
-    { name: 'Alerts', path: '/dashboard/alerts', icon: 'Bell' },
-    { name: 'Quick Actions', path: '/dashboard/actions', icon: 'Zap' },
-  ];
-
-  const weatherMenuItems = [
-    { name: 'Current Weather', path: '/weather', icon: 'Cloud' },
-    { name: 'Forecast', path: '/weather/forecast', icon: 'CloudRain' },
-    { name: 'Weather Alerts', path: '/weather/alerts', icon: 'AlertTriangle' },
-    { name: 'Historical Data', path: '/weather/history', icon: 'Calendar' },
-    { name: 'Weather Maps', path: '/weather/maps', icon: 'Map' },
-  ];
-
-  const financesMenuItems = [
-    { name: 'Overview', path: '/finances', icon: 'DollarSign' },
-    { name: 'Transactions', path: '/finances/transactions', icon: 'CreditCard' },
-    { name: 'Budget Planning', path: '/finances/budget', icon: 'PieChart' },
-    { name: 'Expenses', path: '/finances/expenses', icon: 'TrendingDown' },
-    { name: 'Revenue', path: '/finances/revenue', icon: 'TrendingUp' },
-    { name: 'Financial Reports', path: '/finances/reports', icon: 'FileText' },
-  ];
-
-  const settingsMenuItems = [
-    { name: 'General', path: '/settings', icon: 'Settings' },
-    { name: 'Account', path: '/settings/account', icon: 'User' },
-    { name: 'Notifications', path: '/settings/notifications', icon: 'Bell' },
-    { name: 'Security', path: '/settings/security', icon: 'Shield' },
-    { name: 'Data & Privacy', path: '/settings/privacy', icon: 'Lock' },
-    { name: 'System Preferences', path: '/settings/system', icon: 'Monitor' },
-  ];
-
   const cropsMenuItems = [
     { name: 'Crop Overview', path: '/crops', icon: 'Wheat' },
     { name: 'Add New Crop', path: '/crops/new', icon: 'Plus' },
@@ -56,19 +22,8 @@ const dashboardMenuItems = [
     { name: 'Task Reports', path: '/tasks/reports', icon: 'FileText' },
   ];
 
-  const getMenuItems = (type) => {
-    switch (type) {
-      case 'dashboard': return dashboardMenuItems;
-      case 'weather': return weatherMenuItems;
-      case 'finances': return financesMenuItems;
-      case 'settings': return settingsMenuItems;
-      case 'crops': return cropsMenuItems;
-      case 'tasks': return tasksMenuItems;
-      default: return [];
-    }
-  };
+  const menuItems = type === 'crops' ? cropsMenuItems : tasksMenuItems;
 
-  const menuItems = getMenuItems(type);
   return (
     <div className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0 lg:left-64 bg-white border-r border-gray-200 z-40">
       <div className="flex-1 flex flex-col min-h-0">

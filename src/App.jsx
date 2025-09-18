@@ -20,15 +20,15 @@ function App() {
     <BrowserRouter>
       <div className="App">
         <Routes>
-<Route path="/" element={<Layout title="Dashboard" subSidebar={<SubSidebar type="dashboard" />}><Dashboard /></Layout>} />
+<Route path="/" element={<Layout title="Dashboard"><Dashboard /></Layout>} />
           <Route path="/farmers" element={<Layout title="Farmers"><Farmers /></Layout>} />
 <Route path="/farms" element={<Layout title="Farms"><Farms /></Layout>} />
 <Route path="/crops" element={<Layout title="Crops" subSidebar={<SubSidebar type="crops" />}><Crops /></Layout>} />
           <Route path="/tasks" element={<Layout title="Tasks" subSidebar={<SubSidebar type="tasks" />}><Tasks /></Layout>} />
-          <Route path="/weather" element={<Layout title="Weather" subSidebar={<SubSidebar type="weather" />}><Weather /></Layout>} />
-          <Route path="/finances" element={<Layout title="Finances" subSidebar={<SubSidebar type="finances" />}><Finances /></Layout>} />
+          <Route path="/weather" element={<Layout title="Weather"><Weather /></Layout>} />
+          <Route path="/finances" element={<Layout title="Finances"><Finances /></Layout>} />
           <Route path="/farmers/:id" element={<Layout title="Farmer Details"><FarmerDetails /></Layout>} />
-          <Route path="/settings" element={<Layout title="Settings" subSidebar={<SubSidebar type="settings" />}><Settings /></Layout>} />
+          <Route path="/settings" element={<Layout title="Settings"><Settings /></Layout>} />
         </Routes>
         
         <ToastContainer
