@@ -280,12 +280,13 @@ status_c: farmerData.status,
             memberSince: farmer.member_since_c,
             stats: {
 totalFarms: farmer.total_farms_c || 1,
-              activeCrops: farmer.active_crops_c || 0,
+activeCrops: farmer.active_crops_c || 0,
               pendingTasks: farmer.pending_tasks_c || 0
             },
             tags: farmer.Tags ? farmer.Tags.split(',').map(t => t.trim()) : []
           };
         }
+      }
       
       throw new Error('Farmer update failed');
     } catch (error) {
