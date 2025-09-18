@@ -185,9 +185,16 @@ if (loading) return <Loading type="table" />;
                                 <p className="text-sm text-gray-500">{crop.variety}</p>
                               )}
                             </div>
-                          </div>
+</div>
                         </td>
-<td className="py-4 px-4">
+                        
+                        <td className="py-4 px-4">
+                          <span className="text-gray-700">
+                            {crop.farm_id_c?.Name || 'No farm assigned'}
+                          </span>
+                        </td>
+                        
+                        <td className="py-4 px-4">
                           <Badge variant={getStatusColor(crop.status)}>
                             <span className="capitalize">{crop.status}</span>
                           </Badge>

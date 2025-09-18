@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { format } from "date-fns";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/Card";
+import { cropService } from "@/services/api/cropService";
+import { farmService } from "@/services/api/farmService";
+import ApperIcon from "@/components/ApperIcon";
+import Checkbox from "@/components/atoms/Checkbox";
 import Button from "@/components/atoms/Button";
+import RadioGroup from "@/components/atoms/RadioGroup";
 import Input from "@/components/atoms/Input";
 import Select from "@/components/atoms/Select";
 import RangeInput from "@/components/atoms/RangeInput";
-import Checkbox from "@/components/atoms/Checkbox";
-import RadioGroup from "@/components/atoms/RadioGroup";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/Card";
-import ApperIcon from "@/components/ApperIcon";
-import { cropService } from "@/services/api/cropService";
-import { farmService } from "@/services/api/farmService";
 const CropForm = ({ crop, onSave, onCancel }) => {
 const [formData, setFormData] = useState({
     name: "",
@@ -180,187 +180,152 @@ const validateForm = () => {
 
   return (
     <Card>
-      <CardHeader>
+    <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <ApperIcon name="Sprout" className="w-5 h-5 text-secondary-600" />
-          {crop ? "Edit Crop" : "Add New Crop"}
+            <ApperIcon name="Sprout" className="w-5 h-5 text-secondary-600" />
+            {crop ? "Edit Crop" : "Add New Crop"}
         </CardTitle>
-      </CardHeader>
-      <CardContent>
+    </CardHeader>
+    <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              label="Crop Name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              error={errors.name}
-              placeholder="e.g., Corn, Wheat, Tomatoes"
-            />
-            
-            <Input
-              label="Variety"
-              name="variety"
-              value={formData.variety}
-              onChange={handleChange}
-              placeholder="e.g., Sweet Corn, Winter Wheat"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Select
-              label="Farm"
-              name="farmId"
-              value={formData.farmId}
-              onChange={handleChange}
-              error={errors.farmId}
-              disabled={farmsLoading}
-            >
-              <option value="">
-                {farmsLoading ? "Loading farms..." : "Select a farm"}
-              </option>
-              {farms.map(farm => (
-                <option key={farm.Id} value={farm.Id.toString()}>
-                  {farm.name} - {farm.location}
-                </option>
-              ))}
-            </Select>
-
-            <Select
-              label="Status"
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-            >
-              {statusOptions.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              type="date"
-              label="Planted Date"
-              name="plantedDate"
-              value={formData.plantedDate}
-              onChange={handleChange}
-              error={errors.plantedDate}
-            />
-            
-            <Input
-              type="date"
-              label="Expected Harvest Date"
-              name="expectedHarvest"
-              value={formData.expectedHarvest}
-              onChange={handleChange}
-              error={errors.expectedHarvest}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Input
-              type="number"
-              label="Area (acres)"
-              name="area"
-              value={formData.area}
-              onChange={handleChange}
-              error={errors.area}
-              min="0"
-              step="0.1"
-              placeholder="0.0"
-            />
-<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <RangeInput
-                label="Range"
-                name="range"
-                value={formData.range}
-                onChange={handleChange}
-                min={0}
-                max={20}
-                step={1}
-                error={errors.range}
-              />
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Tags
-                </label>
-                <Input
-                  type="text"
-                  name="tags"
-                  value={formData.tags}
-                  onChange={handleChange}
-                  placeholder="Enter tags separated by commas"
-                  error={errors.tags}
-                />
-                <p className="text-xs text-gray-500 mt-1">
-                  Separate multiple tags with commas
-                </p>
-              </div>
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Checkbox
-                name="checkbox"
-                label="Checkbox Option"
-                checked={formData.checkbox}
-                onChange={handleChange}
-              />
-
-              <RadioGroup
-                label="Radio Selection"
-                name="radio"
-                value={formData.radio}
-                onChange={handleChange}
-                options={[
-                  { value: "option1", label: "Option 1" },
-                  { value: "option2", label: "Option 2" },
-                  { value: "option3", label: "Option 3" }
-                ]}
-                error={errors.radio}
-              />
+                <Input
+                    label="Crop Name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    error={errors.name}
+                    placeholder="e.g., Corn, Wheat, Tomatoes" />
+                <Input
+                    label="Variety"
+                    name="variety"
+                    value={formData.variety}
+                    onChange={handleChange}
+                    placeholder="e.g., Sweet Corn, Winter Wheat" />
             </div>
-
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Select
+                    label="Farm"
+                    name="farmId"
+                    value={formData.farmId}
+                    onChange={handleChange}
+                    error={errors.farmId}
+                    disabled={farmsLoading}>
+                    <option value="">
+                        {farmsLoading ? "Loading farms..." : "Select a farm"}
+                    </option>
+                    {farms.map(farm => <option key={farm.Id} value={farm.Id.toString()}>
+                        {farm.name}- {farm.location}
+                    </option>)}
+                </Select>
+                <Select
+                    label="Status"
+                    name="status"
+                    value={formData.status}
+                    onChange={handleChange}>
+                    {statusOptions.map(option => <option key={option.value} value={option.value}>
+                        {option.label}
+                    </option>)}
+                </Select>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Input
+                    type="date"
+                    label="Planted Date"
+                    name="plantedDate"
+                    value={formData.plantedDate}
+                    onChange={handleChange}
+                    error={errors.plantedDate} />
+                <Input
+                    type="date"
+                    label="Expected Harvest Date"
+                    name="expectedHarvest"
+                    value={formData.expectedHarvest}
+                    onChange={handleChange}
+                    error={errors.expectedHarvest} />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Input
+                    type="number"
+                    label="Area (acres)"
+                    name="area"
+                    value={formData.area}
+                    onChange={handleChange}
+                    error={errors.area}
+                    min="0"
+                    placeholder="0.0" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <RangeInput
+                    label="Range"
+                    label="Range"
+                    name="range"
+                    value={formData.range}
+                    onChange={handleChange}
+                    min={0}
+                    max={20}
+                    step={1}
+                    error={errors.range} />
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Tags
+                                        </label>
+                    <Input
+                        type="text"
+                        name="tags"
+                        value={formData.tags}
+                        onChange={handleChange}
+                        placeholder="Enter tags separated by commas"
+                        error={errors.tags} />
+                    <p className="text-xs text-gray-500 mt-1">Separate multiple tags with commas
+                                        </p>
+                </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Checkbox
+                    name="checkbox"
+                    label="Checkbox Option"
+                    checked={formData.checkbox}
+                    onChange={handleChange} />
+                <RadioGroup
+                    label="Radio Selection"
+                    name="radio"
+                    value={formData.radio}
+                    onChange={handleChange}
+                    options={[{
+                        value: "option1",
+                        label: "Option 1"
+                    }, {
+                        value: "option2",
+                        label: "Option 2"
+                    }, {
+                        value: "option3",
+                        label: "Option 3"
+                    }]}
+                    error={errors.radio} />
+            </div>
             <Input
-              type="url"
-              label="Website"
-              name="website"
-              value={formData.website}
-              onChange={handleChange}
-              placeholder="https://example.com"
-              error={errors.website}
-            />
-          </div>
-
-          <div className="flex gap-3 pt-4">
-            <Button
-              type="submit"
-              disabled={loading}
-              className="flex-1 sm:flex-none"
-            >
-              {loading ? (
-                <ApperIcon name="Loader2" className="w-4 h-4 animate-spin mr-2" />
-              ) : (
-                <ApperIcon name="Save" className="w-4 h-4 mr-2" />
-              )}
-              {crop ? "Update Crop" : "Add Crop"}
-            </Button>
-            
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onCancel}
-              className="flex-1 sm:flex-none"
-            >
-              Cancel
-            </Button>
-          </div>
+                type="url"
+                label="Website"
+                name="website"
+                value={formData.website}
+                onChange={handleChange}
+                placeholder="https://example.com"
+                error={errors.website} />
+            <div className="flex gap-3 pt-4">
+                <Button type="submit" disabled={loading} className="flex-1 sm:flex-none">
+                    {loading ? <ApperIcon name="Loader2" className="w-4 h-4 animate-spin mr-2" /> : <ApperIcon name="Save" className="w-4 h-4 mr-2" />}
+                    {crop ? "Update Crop" : "Add Crop"}
+                </Button>
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={onCancel}
+                    className="flex-1 sm:flex-none">Cancel
+                                </Button>
+            </div>
         </form>
-      </CardContent>
-    </Card>
+    </CardContent>
+</Card>
   );
 };
 
