@@ -1,66 +1,242 @@
-import cropData from "@/services/mockData/crops.json";
-
 class CropService {
   constructor() {
-    this.crops = [...cropData];
+    const { ApperClient } = window.ApperSDK;
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    });
+    this.tableName = 'crop_c';
   }
 
   async getAll() {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return [...this.crops];
+    try {
+      const params = {
+        fields: [
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "name_c"}},
+          {"field": {"Name": "variety_c"}},
+          {"field": {"Name": "planted_date_c"}},
+          {"field": {"Name": "area_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "expected_harvest_c"}},
+          {"field": {"Name": "farm_id_c"}}
+        ]
+      };
+      
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+      
+      // Transform data for UI compatibility
+      return response.data.map(crop => ({
+        Id: crop.Id,
+        name: crop.name_c || crop.Name,
+        variety: crop.variety_c,
+        plantedDate: crop.planted_date_c,
+        area: crop.area_c,
+        status: crop.status_c,
+        expectedHarvest: crop.expected_harvest_c,
+        farmId: crop.farm_id_c?.Id || crop.farm_id_c
+      }));
+    } catch (error) {
+      console.error("Error fetching crops:", error);
+      throw error;
+    }
   }
 
   async getById(id) {
-    await new Promise(resolve => setTimeout(resolve, 200));
-    const crop = this.crops.find(c => c.Id === parseInt(id));
-    if (!crop) {
-      throw new Error("Crop not found");
+    try {
+      const cropId = parseInt(id);
+      if (isNaN(cropId)) {
+        throw new Error('Invalid crop ID');
+      }
+
+      const params = {
+        fields: [
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "name_c"}},
+          {"field": {"Name": "variety_c"}},
+          {"field": {"Name": "planted_date_c"}},
+          {"field": {"Name": "area_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "expected_harvest_c"}},
+          {"field": {"Name": "farm_id_c"}}
+        ]
+      };
+
+      const response = await this.apperClient.getRecordById(this.tableName, cropId, params);
+      
+      if (!response.success || !response.data) {
+        throw new Error('Crop not found');
+      }
+
+      const crop = response.data;
+      return {
+        Id: crop.Id,
+        name: crop.name_c || crop.Name,
+        variety: crop.variety_c,
+        plantedDate: crop.planted_date_c,
+        area: crop.area_c,
+        status: crop.status_c,
+        expectedHarvest: crop.expected_harvest_c,
+        farmId: crop.farm_id_c?.Id || crop.farm_id_c
+      };
+    } catch (error) {
+      console.error(`Error fetching crop ${id}:`, error);
+      throw error;
     }
-    return { ...crop };
   }
 
   async create(cropData) {
-    await new Promise(resolve => setTimeout(resolve, 400));
-    
-    const newId = this.crops.length > 0 ? Math.max(...this.crops.map(c => c.Id)) + 1 : 1;
-    const newCrop = {
-      Id: newId,
-      ...cropData,
-      createdAt: new Date().toISOString()
-    };
-    
-    this.crops.push(newCrop);
-    return { ...newCrop };
+    try {
+      const params = {
+        records: [{
+          Name: cropData.name,
+          name_c: cropData.name,
+          variety_c: cropData.variety,
+          planted_date_c: cropData.plantedDate,
+          area_c: parseFloat(cropData.area),
+          status_c: cropData.status || 'planted',
+          expected_harvest_c: cropData.expectedHarvest,
+          farm_id_c: parseInt(cropData.farmId)
+        }]
+      };
+
+      const response = await this.apperClient.createRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to create ${failed.length} crops:`, failed);
+          throw new Error('Failed to create crop');
+        }
+        
+        if (successful.length > 0) {
+          const crop = successful[0].data;
+          return {
+            Id: crop.Id,
+            name: crop.name_c || crop.Name,
+            variety: crop.variety_c,
+            plantedDate: crop.planted_date_c,
+            area: crop.area_c,
+            status: crop.status_c,
+            expectedHarvest: crop.expected_harvest_c,
+            farmId: crop.farm_id_c?.Id || crop.farm_id_c
+          };
+        }
+      }
+      
+      throw new Error('No crop created');
+    } catch (error) {
+      console.error("Error creating crop:", error);
+      throw error;
+    }
   }
 
   async update(id, cropData) {
-    await new Promise(resolve => setTimeout(resolve, 400));
-    
-    const index = this.crops.findIndex(c => c.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error("Crop not found");
+    try {
+      const cropId = parseInt(id);
+      if (isNaN(cropId)) {
+        throw new Error('Invalid crop ID');
+      }
+
+      const params = {
+        records: [{
+          Id: cropId,
+          Name: cropData.name,
+          name_c: cropData.name,
+          variety_c: cropData.variety,
+          planted_date_c: cropData.plantedDate,
+          area_c: parseFloat(cropData.area),
+          status_c: cropData.status,
+          expected_harvest_c: cropData.expectedHarvest,
+          farm_id_c: parseInt(cropData.farmId)
+        }]
+      };
+
+      const response = await this.apperClient.updateRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to update ${failed.length} crops:`, failed);
+          throw new Error('Failed to update crop');
+        }
+        
+        if (successful.length > 0) {
+          const crop = successful[0].data;
+          return {
+            Id: crop.Id,
+            name: crop.name_c || crop.Name,
+            variety: crop.variety_c,
+            plantedDate: crop.planted_date_c,
+            area: crop.area_c,
+            status: crop.status_c,
+            expectedHarvest: crop.expected_harvest_c,
+            farmId: crop.farm_id_c?.Id || crop.farm_id_c
+          };
+        }
+      }
+      
+      throw new Error('Crop update failed');
+    } catch (error) {
+      console.error("Error updating crop:", error);
+      throw error;
     }
-    
-    this.crops[index] = {
-      ...this.crops[index],
-      ...cropData,
-      updatedAt: new Date().toISOString()
-    };
-    
-    return { ...this.crops[index] };
   }
 
   async delete(id) {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
-    const index = this.crops.findIndex(c => c.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error("Crop not found");
+    try {
+      const cropId = parseInt(id);
+      if (isNaN(cropId)) {
+        throw new Error('Invalid crop ID');
+      }
+
+      const params = { 
+        RecordIds: [cropId]
+      };
+
+      const response = await this.apperClient.deleteRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to delete ${failed.length} crops:`, failed);
+          throw new Error('Failed to delete crop');
+        }
+        
+        return successful.length === 1;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Error deleting crop:", error);
+      throw error;
     }
-    
-    this.crops.splice(index, 1);
-    return true;
   }
 }
 
