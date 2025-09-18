@@ -53,22 +53,22 @@ const WeatherCard = ({ weather }) => {
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Current Weather */}
-        <div className="flex items-center justify-between">
+<div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${getGradientClass(weather.current.condition)} flex items-center justify-center shadow-lg`}>
+            <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${getGradientClass(weather.current?.condition)} flex items-center justify-center shadow-lg`}>
               <ApperIcon 
-                name={getWeatherIcon(weather.current.condition)} 
+                name={getWeatherIcon(weather.current?.condition)} 
                 className="w-6 h-6 text-white" 
               />
             </div>
             <div>
-              <p className="text-2xl font-bold text-gray-900">{weather.current.temperature}°F</p>
-              <p className="text-sm text-gray-600 capitalize">{weather.current.condition}</p>
+              <p className="text-2xl font-bold text-gray-900">{weather.current?.temperature || '--'}°F</p>
+              <p className="text-sm text-gray-600 capitalize">{weather.current?.condition || 'Unknown'}</p>
             </div>
           </div>
           <div className="text-right">
             <p className="text-sm text-gray-600">Humidity</p>
-            <p className="font-semibold text-gray-900">{weather.current.humidity}%</p>
+            <p className="font-semibold text-gray-900">{weather.current?.humidity || '--'}%</p>
           </div>
         </div>
 
@@ -76,16 +76,16 @@ const WeatherCard = ({ weather }) => {
         <div className="grid grid-cols-2 gap-4 pt-4 border-t border-blue-200">
           <div className="flex items-center gap-2">
             <ApperIcon name="Wind" className="w-4 h-4 text-blue-500" />
-            <div>
+<div>
               <p className="text-xs text-gray-600">Wind</p>
-              <p className="text-sm font-medium">{weather.current.windSpeed} mph</p>
+              <p className="text-sm font-medium">{weather.current?.windSpeed || '--'} mph</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <ApperIcon name="Eye" className="w-4 h-4 text-blue-500" />
             <div>
               <p className="text-xs text-gray-600">Visibility</p>
-              <p className="text-sm font-medium">{weather.current.visibility} mi</p>
+              <p className="text-sm font-medium">{weather.current?.visibility || '--'} mi</p>
             </div>
           </div>
         </div>
@@ -93,31 +93,31 @@ const WeatherCard = ({ weather }) => {
         {/* 3-Day Forecast */}
         <div className="pt-4 border-t border-blue-200">
           <h4 className="text-sm font-medium text-gray-700 mb-3">3-Day Forecast</h4>
-          <div className="grid grid-cols-3 gap-2">
-            {weather.forecast.map((day, index) => (
+<div className="grid grid-cols-3 gap-2">
+            {(weather.forecast || []).map((day, index) => (
               <div key={index} className="text-center p-2 bg-white/50 rounded-lg backdrop-blur-sm">
-                <p className="text-xs text-gray-600 mb-1">{day.day}</p>
-                <div className={`w-6 h-6 mx-auto mb-1 rounded-full bg-gradient-to-br ${getGradientClass(day.condition)} flex items-center justify-center`}>
+                <p className="text-xs text-gray-600 mb-1">{day?.day || 'N/A'}</p>
+                <div className={`w-6 h-6 mx-auto mb-1 rounded-full bg-gradient-to-br ${getGradientClass(day?.condition)} flex items-center justify-center`}>
                   <ApperIcon 
-                    name={getWeatherIcon(day.condition)} 
+                    name={getWeatherIcon(day?.condition)} 
                     className="w-3 h-3 text-white" 
                   />
                 </div>
-                <p className="text-xs font-medium">{day.high}°/{day.low}°</p>
+                <p className="text-xs font-medium">{day?.high || '--'}°/{day?.low || '--'}°</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* Alerts */}
-        {weather.alerts && weather.alerts.length > 0 && (
+{weather.alerts && Array.isArray(weather.alerts) && weather.alerts.length > 0 && (
           <div className="pt-4 border-t border-blue-200">
             <div className="bg-gradient-to-r from-amber-50 to-amber-100 border border-amber-200 rounded-lg p-3">
               <div className="flex items-start gap-2">
                 <ApperIcon name="AlertTriangle" className="w-4 h-4 text-amber-600 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium text-amber-800">Weather Alert</p>
-                  <p className="text-xs text-amber-700">{weather.alerts[0]}</p>
+                  <p className="text-xs text-amber-700">{weather.alerts[0] || 'Alert details unavailable'}</p>
                 </div>
               </div>
             </div>
