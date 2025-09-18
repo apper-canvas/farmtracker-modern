@@ -1,4 +1,4 @@
-import mockFarms from '@/services/mockData/farms.json';
+import mockFarms from "@/services/mockData/farms.json";
 
 class FarmService {
   constructor() {
@@ -33,13 +33,16 @@ class FarmService {
     // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 400));
 
-    const newFarm = {
+const newFarm = {
       Id: this.nextId++,
       name: farmData.name,
       location: farmData.location,
       size: parseFloat(farmData.size),
       status: farmData.status || 'active',
       description: farmData.description || '',
+      valuation: farmData.valuation ? parseFloat(farmData.valuation) : null,
+      farmTypes: farmData.farmTypes || [],
+      rating: farmData.rating || 0,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -62,13 +65,16 @@ class FarmService {
       throw new Error('Farm not found');
     }
 
-    const updatedFarm = {
+const updatedFarm = {
       ...this.farms[index],
       name: farmData.name,
       location: farmData.location,
       size: parseFloat(farmData.size),
       status: farmData.status,
       description: farmData.description || '',
+      valuation: farmData.valuation ? parseFloat(farmData.valuation) : this.farms[index].valuation,
+      farmTypes: farmData.farmTypes || this.farms[index].farmTypes,
+      rating: farmData.rating !== undefined ? farmData.rating : this.farms[index].rating,
       updatedAt: new Date().toISOString()
     };
 

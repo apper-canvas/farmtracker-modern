@@ -21,12 +21,15 @@ const Farms = () => {
   const [sortBy, setSortBy] = useState('name');
   const [showModal, setShowModal] = useState(false);
   const [editingFarm, setEditingFarm] = useState(null);
-  const [formData, setFormData] = useState({
+const [formData, setFormData] = useState({
     name: '',
     location: '',
     size: '',
     status: 'active',
-    description: ''
+    description: '',
+    valuation: '',
+    farmTypes: [],
+    rating: 0
   });
 
   useEffect(() => {
@@ -87,9 +90,12 @@ const Farms = () => {
     setFormData({
       name: farm.name,
       location: farm.location,
-      size: farm.size.toString(),
+size: farm.size.toString(),
       status: farm.status,
-      description: farm.description
+      description: farm.description,
+      valuation: farm.valuation ? farm.valuation.toString() : '',
+      farmTypes: farm.farmTypes || [],
+      rating: farm.rating || 0
     });
     setShowModal(true);
   };
@@ -99,10 +105,13 @@ const Farms = () => {
     setEditingFarm(null);
     setFormData({
       name: '',
-      location: '',
+location: '',
       size: '',
       status: 'active',
-      description: ''
+      description: '',
+      valuation: '',
+      farmTypes: [],
+      rating: 0
     });
   };
 
@@ -217,11 +226,50 @@ const Farms = () => {
                     </Badge>
                   </div>
 
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center text-sm text-gray-600">
-                      <ApperIcon name="Maximize" size={16} className="mr-2" />
-                      {farm.size} acres
+<div className="space-y-2 mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <ApperIcon name="Maximize" size={16} className="mr-2" />
+                        {farm.size} acres
+                      </div>
+                      {farm.valuation && (
+                        <div className="flex items-center text-sm font-medium text-green-600">
+                          <ApperIcon name="DollarSign" size={14} className="mr-1" />
+                          ${farm.valuation.toLocaleString()}
+                        </div>
+                      )}
                     </div>
+                    {farm.farmTypes && farm.farmTypes.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {farm.farmTypes.slice(0, 3).map((type, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {type}
+                          </Badge>
+                        ))}
+                        {farm.farmTypes.length > 3 && (
+                          <Badge variant="secondary" className="text-xs">
+                            +{farm.farmTypes.length - 3}
+                          </Badge>
+                        )}
+                      </div>
+                    )}
+                    {farm.rating > 0 && (
+                      <div className="flex items-center mb-2">
+                        <div className="flex items-center">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <ApperIcon
+                              key={star}
+                              name="Star"
+                              size={14}
+                              className={`${
+                                star <= farm.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        <span className="ml-2 text-sm text-gray-600">({farm.rating}/5)</span>
+                      </div>
+                    )}
                     {farm.description && (
                       <p className="text-sm text-gray-600 line-clamp-2">
                         {farm.description}
@@ -314,6 +362,19 @@ const Farms = () => {
                     placeholder="Enter size in acres"
                   />
                 </div>
+<div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Farm Valuation ($)
+                  </label>
+                  <Input
+                    type="number"
+                    value={formData.valuation}
+                    onChange={(e) => setFormData(prev => ({...prev, valuation: e.target.value}))}
+                    placeholder="Enter farm valuation"
+                    min="0"
+                    step="1000"
+                  />
+                </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -327,6 +388,90 @@ const Farms = () => {
                     <option value="inactive">Inactive</option>
                     <option value="planning">Planning</option>
                   </Select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Type of Farms
+                  </label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {['Crop Production', 'Livestock', 'Dairy', 'Poultry', 'Organic', 'Mixed'].map((type) => (
+                      <label key={type} className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.farmTypes.includes(type)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setFormData(prev => ({
+                                ...prev,
+                                farmTypes: [...prev.farmTypes, type]
+                              }));
+                            } else {
+                              setFormData(prev => ({
+                                ...prev,
+                                farmTypes: prev.farmTypes.filter(t => t !== type)
+                              }));
+                            }
+                          }}
+                          className="rounded border-gray-300 text-primary-500 focus:ring-primary-500"
+                        />
+                        <span className="text-sm text-gray-700">{type}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Rating of Farm
+                  </label>
+                  <div className="flex items-center space-x-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setFormData(prev => ({...prev, rating: star}))}
+                        onMouseEnter={(e) => {
+                          const stars = e.currentTarget.parentElement.children;
+                          for (let i = 0; i < stars.length; i++) {
+                            const starIcon = stars[i].querySelector('svg');
+                            if (i < star) {
+                              starIcon.classList.add('text-yellow-400', 'fill-current');
+                              starIcon.classList.remove('text-gray-300');
+                            } else {
+                              starIcon.classList.add('text-gray-300');
+                              starIcon.classList.remove('text-yellow-400', 'fill-current');
+                            }
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          const stars = e.currentTarget.parentElement.children;
+                          for (let i = 0; i < stars.length; i++) {
+                            const starIcon = stars[i].querySelector('svg');
+                            if (i < formData.rating) {
+                              starIcon.classList.add('text-yellow-400', 'fill-current');
+                              starIcon.classList.remove('text-gray-300');
+                            } else {
+                              starIcon.classList.add('text-gray-300');
+                              starIcon.classList.remove('text-yellow-400', 'fill-current');
+                            }
+                          }
+                        }}
+                        className="focus:outline-none focus:ring-2 focus:ring-primary-500 rounded"
+                      >
+                        <ApperIcon
+                          name="Star"
+                          size={24}
+                          className={`transition-colors ${
+                            star <= formData.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
+                          } hover:text-yellow-400`}
+                        />
+                      </button>
+                    ))}
+                    <span className="ml-3 text-sm text-gray-600">
+                      {formData.rating > 0 ? `${formData.rating}/5` : 'No rating'}
+                    </span>
+                  </div>
                 </div>
 
                 <div>
