@@ -18,7 +18,8 @@ const Farms = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
-  const [sortBy, setSortBy] = useState('name');
+const [sortBy, setSortBy] = useState('name');
+  const [hoverRating, setHoverRating] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [editingFarm, setEditingFarm] = useState(null);
 const [formData, setFormData] = useState({
@@ -426,45 +427,23 @@ location: '',
                     Rating of Farm
                   </label>
                   <div className="flex items-center space-x-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
+{[1, 2, 3, 4, 5].map((star) => (
                       <button
                         key={star}
                         type="button"
                         onClick={() => setFormData(prev => ({...prev, rating: star}))}
-                        onMouseEnter={(e) => {
-                          const stars = e.currentTarget.parentElement.children;
-                          for (let i = 0; i < stars.length; i++) {
-                            const starIcon = stars[i].querySelector('svg');
-                            if (i < star) {
-                              starIcon.classList.add('text-yellow-400', 'fill-current');
-                              starIcon.classList.remove('text-gray-300');
-                            } else {
-                              starIcon.classList.add('text-gray-300');
-                              starIcon.classList.remove('text-yellow-400', 'fill-current');
-                            }
-                          }
-                        }}
-                        onMouseLeave={(e) => {
-                          const stars = e.currentTarget.parentElement.children;
-                          for (let i = 0; i < stars.length; i++) {
-                            const starIcon = stars[i].querySelector('svg');
-                            if (i < formData.rating) {
-                              starIcon.classList.add('text-yellow-400', 'fill-current');
-                              starIcon.classList.remove('text-gray-300');
-                            } else {
-                              starIcon.classList.add('text-gray-300');
-                              starIcon.classList.remove('text-yellow-400', 'fill-current');
-                            }
-                          }
-                        }}
-                        className="focus:outline-none focus:ring-2 focus:ring-primary-500 rounded"
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        className="focus:outline-none transition-transform hover:scale-110"
                       >
                         <ApperIcon
                           name="Star"
                           size={24}
                           className={`transition-colors ${
-                            star <= formData.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                          } hover:text-yellow-400`}
+                            star <= (hoverRating || formData.rating) 
+                              ? 'text-yellow-400 fill-current' 
+                              : 'text-gray-300'
+                          }`}
                         />
                       </button>
                     ))}
