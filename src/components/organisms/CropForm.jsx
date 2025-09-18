@@ -4,6 +4,9 @@ import { format } from "date-fns";
 import Button from "@/components/atoms/Button";
 import Input from "@/components/atoms/Input";
 import Select from "@/components/atoms/Select";
+import RangeInput from "@/components/atoms/RangeInput";
+import Checkbox from "@/components/atoms/Checkbox";
+import RadioGroup from "@/components/atoms/RadioGroup";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/atoms/Card";
 import ApperIcon from "@/components/ApperIcon";
 import { cropService } from "@/services/api/cropService";
@@ -16,7 +19,12 @@ const [formData, setFormData] = useState({
     area: "",
     status: "planted",
     expectedHarvest: "",
-    farmId: ""
+    farmId: "",
+    range: "0-10",
+    tags: "",
+    checkbox: false,
+    radio: "option1",
+    website: ""
   });
   
   const [errors, setErrors] = useState({});
@@ -52,14 +60,19 @@ const [formData, setFormData] = useState({
 
   useEffect(() => {
     if (crop) {
-      setFormData({
+setFormData({
         name: crop.name || "",
         variety: crop.variety || "",
         plantedDate: crop.plantedDate ? format(new Date(crop.plantedDate), "yyyy-MM-dd") : "",
         area: crop.area?.toString() || "",
         status: crop.status || "planted",
         expectedHarvest: crop.expectedHarvest ? format(new Date(crop.expectedHarvest), "yyyy-MM-dd") : "",
-        farmId: crop.farmId?.toString() || ""
+        farmId: crop.farmId?.toString() || "",
+        range: crop.range || "0-10",
+        tags: crop.tags || "",
+        checkbox: crop.checkbox || false,
+        radio: crop.radio || "option1",
+        website: crop.website || ""
       });
     }
   }, [crop]);
@@ -80,7 +93,7 @@ const [formData, setFormData] = useState({
     }
   };
 
-  const validateForm = () => {
+const validateForm = () => {
     const newErrors = {};
     
     if (!formData.name.trim()) {
@@ -103,8 +116,25 @@ const [formData, setFormData] = useState({
       }
     }
 
+    if (!formData.tags.trim()) {
+      newErrors.tags = "Tags are required";
+    }
+
+    if (formData.website && !isValidUrl(formData.website)) {
+      newErrors.website = "Please enter a valid website URL";
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const isValidUrl = (string) => {
+    try {
+      const url = new URL(string);
+      return url.protocol === "http:" || url.protocol === "https:";
+    } catch (_) {
+      return false;
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -123,7 +153,12 @@ const [formData, setFormData] = useState({
         area: parseFloat(formData.area),
         plantedDate: new Date(formData.plantedDate).toISOString(),
         expectedHarvest: formData.expectedHarvest ? new Date(formData.expectedHarvest).toISOString() : null,
-        farmId: parseInt(formData.farmId)
+        farmId: parseInt(formData.farmId),
+        range: formData.range,
+        tags: formData.tags,
+        checkbox: formData.checkbox,
+        radio: formData.radio,
+        website: formData.website
       };
 
       let savedCrop;
@@ -237,8 +272,67 @@ const [formData, setFormData] = useState({
               step="0.1"
               placeholder="0.0"
             />
-            
-            <div></div>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <RangeInput
+                label="Range"
+                name="range"
+                value={formData.range}
+                onChange={handleChange}
+                min={0}
+                max={20}
+                step={1}
+                error={errors.range}
+              />
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tags
+                </label>
+                <Input
+                  type="text"
+                  name="tags"
+                  value={formData.tags}
+                  onChange={handleChange}
+                  placeholder="Enter tags separated by commas"
+                  error={errors.tags}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Separate multiple tags with commas
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Checkbox
+                name="checkbox"
+                label="Checkbox Option"
+                checked={formData.checkbox}
+                onChange={handleChange}
+              />
+
+              <RadioGroup
+                label="Radio Selection"
+                name="radio"
+                value={formData.radio}
+                onChange={handleChange}
+                options={[
+                  { value: "option1", label: "Option 1" },
+                  { value: "option2", label: "Option 2" },
+                  { value: "option3", label: "Option 3" }
+                ]}
+                error={errors.radio}
+              />
+            </div>
+
+            <Input
+              type="url"
+              label="Website"
+              name="website"
+              value={formData.website}
+              onChange={handleChange}
+              placeholder="https://example.com"
+              error={errors.website}
+            />
           </div>
 
           <div className="flex gap-3 pt-4">

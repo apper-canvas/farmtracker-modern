@@ -11,7 +11,7 @@ class CropService {
   async getAll() {
     try {
       const params = {
-        fields: [
+fields: [
           {"field": {"Name": "Name"}},
           {"field": {"Name": "name_c"}},
           {"field": {"Name": "variety_c"}},
@@ -19,7 +19,12 @@ class CropService {
           {"field": {"Name": "area_c"}},
           {"field": {"Name": "status_c"}},
           {"field": {"Name": "expected_harvest_c"}},
-          {"field": {"Name": "farm_id_c"}}
+          {"field": {"Name": "farm_id_c"}},
+          {"field": {"Name": "range_c"}},
+          {"field": {"Name": "Tags"}},
+          {"field": {"Name": "checkbox_c"}},
+          {"field": {"Name": "radio_c"}},
+          {"field": {"Name": "website_c"}}
         ]
       };
       
@@ -32,14 +37,19 @@ class CropService {
       
       // Transform data for UI compatibility
       return response.data.map(crop => ({
-        Id: crop.Id,
+Id: crop.Id,
         name: crop.name_c || crop.Name,
         variety: crop.variety_c,
         plantedDate: crop.planted_date_c,
         area: crop.area_c,
         status: crop.status_c,
         expectedHarvest: crop.expected_harvest_c,
-        farmId: crop.farm_id_c?.Id || crop.farm_id_c
+        farmId: crop.farm_id_c?.Id || crop.farm_id_c,
+        range: crop.range_c,
+        tags: crop.Tags,
+        checkbox: crop.checkbox_c,
+        radio: crop.radio_c,
+        website: crop.website_c
       }));
     } catch (error) {
       console.error("Error fetching crops:", error);
@@ -55,7 +65,7 @@ class CropService {
       }
 
       const params = {
-        fields: [
+fields: [
           {"field": {"Name": "Name"}},
           {"field": {"Name": "name_c"}},
           {"field": {"Name": "variety_c"}},
@@ -63,7 +73,12 @@ class CropService {
           {"field": {"Name": "area_c"}},
           {"field": {"Name": "status_c"}},
           {"field": {"Name": "expected_harvest_c"}},
-          {"field": {"Name": "farm_id_c"}}
+          {"field": {"Name": "farm_id_c"}},
+          {"field": {"Name": "range_c"}},
+          {"field": {"Name": "Tags"}},
+          {"field": {"Name": "checkbox_c"}},
+          {"field": {"Name": "radio_c"}},
+          {"field": {"Name": "website_c"}}
         ]
       };
 
@@ -74,7 +89,7 @@ class CropService {
       }
 
       const crop = response.data;
-      return {
+return {
         Id: crop.Id,
         name: crop.name_c || crop.Name,
         variety: crop.variety_c,
@@ -82,7 +97,12 @@ class CropService {
         area: crop.area_c,
         status: crop.status_c,
         expectedHarvest: crop.expected_harvest_c,
-        farmId: crop.farm_id_c?.Id || crop.farm_id_c
+        farmId: crop.farm_id_c?.Id || crop.farm_id_c,
+        range: crop.range_c,
+        tags: crop.Tags,
+        checkbox: crop.checkbox_c,
+        radio: crop.radio_c,
+        website: crop.website_c
       };
     } catch (error) {
       console.error(`Error fetching crop ${id}:`, error);
@@ -94,14 +114,19 @@ class CropService {
     try {
       const params = {
         records: [{
-          Name: cropData.name,
+Name: cropData.name,
           name_c: cropData.name,
           variety_c: cropData.variety,
           planted_date_c: cropData.plantedDate,
           area_c: parseFloat(cropData.area),
           status_c: cropData.status || 'planted',
           expected_harvest_c: cropData.expectedHarvest,
-          farm_id_c: parseInt(cropData.farmId)
+          farm_id_c: parseInt(cropData.farmId),
+          range_c: parseInt(cropData.range?.split('-')[1]) || 10,
+          Tags: cropData.tags,
+          checkbox_c: cropData.checkbox,
+          radio_c: cropData.radio,
+          website_c: cropData.website
         }]
       };
 
@@ -125,13 +150,18 @@ class CropService {
           const crop = successful[0].data;
           return {
             Id: crop.Id,
-            name: crop.name_c || crop.Name,
+name: crop.name_c || crop.Name,
             variety: crop.variety_c,
             plantedDate: crop.planted_date_c,
             area: crop.area_c,
             status: crop.status_c,
             expectedHarvest: crop.expected_harvest_c,
-            farmId: crop.farm_id_c?.Id || crop.farm_id_c
+            farmId: crop.farm_id_c?.Id || crop.farm_id_c,
+            range: crop.range_c,
+            tags: crop.Tags,
+            checkbox: crop.checkbox_c,
+            radio: crop.radio_c,
+            website: crop.website_c
           };
         }
       }
@@ -153,14 +183,19 @@ class CropService {
       const params = {
         records: [{
           Id: cropId,
-          Name: cropData.name,
+Name: cropData.name,
           name_c: cropData.name,
           variety_c: cropData.variety,
           planted_date_c: cropData.plantedDate,
           area_c: parseFloat(cropData.area),
           status_c: cropData.status,
           expected_harvest_c: cropData.expectedHarvest,
-          farm_id_c: parseInt(cropData.farmId)
+          farm_id_c: parseInt(cropData.farmId),
+          range_c: parseInt(cropData.range?.split('-')[1]) || 10,
+          Tags: cropData.tags,
+          checkbox_c: cropData.checkbox,
+          radio_c: cropData.radio,
+          website_c: cropData.website
         }]
       };
 
@@ -184,13 +219,18 @@ class CropService {
           const crop = successful[0].data;
           return {
             Id: crop.Id,
-            name: crop.name_c || crop.Name,
+name: crop.name_c || crop.Name,
             variety: crop.variety_c,
             plantedDate: crop.planted_date_c,
             area: crop.area_c,
             status: crop.status_c,
             expectedHarvest: crop.expected_harvest_c,
-            farmId: crop.farm_id_c?.Id || crop.farm_id_c
+            farmId: crop.farm_id_c?.Id || crop.farm_id_c,
+            range: crop.range_c,
+            tags: crop.Tags,
+            checkbox: crop.checkbox_c,
+            radio: crop.radio_c,
+            website: crop.website_c
           };
         }
       }

@@ -158,6 +158,8 @@ if (loading) return <Loading type="table" />;
                       <th className="text-left py-3 px-4 font-medium text-gray-700">Farm</th>
                       <th className="text-left py-3 px-4 font-medium text-gray-700">Status</th>
                       <th className="text-left py-3 px-4 font-medium text-gray-700">Area</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-700">Tags</th>
+                      <th className="text-left py-3 px-4 font-medium text-gray-700">Website</th>
                       <th className="text-left py-3 px-4 font-medium text-gray-700">Planted Date</th>
                       <th className="text-left py-3 px-4 font-medium text-gray-700">Expected Harvest</th>
                       <th className="text-right py-3 px-4 font-medium text-gray-700">Actions</th>
@@ -185,8 +187,7 @@ if (loading) return <Loading type="table" />;
                             </div>
                           </div>
                         </td>
-                        
-                        <td className="py-4 px-4">
+<td className="py-4 px-4">
                           <Badge variant={getStatusColor(crop.status)}>
                             <span className="capitalize">{crop.status}</span>
                           </Badge>
@@ -194,6 +195,33 @@ if (loading) return <Loading type="table" />;
                         
                         <td className="py-4 px-4">
                           <span className="text-gray-900">{crop.area} acres</span>
+                        </td>
+                        
+                        <td className="py-4 px-4">
+                          <div className="flex flex-wrap gap-1">
+                            {crop.tags ? crop.tags.split(',').map((tag, index) => (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {tag.trim()}
+                              </Badge>
+                            )) : (
+                              <span className="text-gray-400">No tags</span>
+                            )}
+                          </div>
+                        </td>
+                        
+                        <td className="py-4 px-4">
+                          {crop.website ? (
+                            <a 
+                              href={crop.website} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-primary-600 hover:text-primary-800 underline"
+                            >
+                              Visit Site
+                            </a>
+                          ) : (
+                            <span className="text-gray-400">No website</span>
+                          )}
                         </td>
                         
                         <td className="py-4 px-4">
